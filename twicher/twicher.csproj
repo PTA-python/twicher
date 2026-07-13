@@ -6,4 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\images\favicon.png" />
+    <None Include="wwwroot\images\icons\group-2.png" />
+    <None Include="wwwroot\images\icons\home.png" />
+    <None Include="wwwroot\images\icons\page.png" />
+    <None Include="wwwroot\images\icons\video.png" />
+    <None Include="wwwroot\images\logo.png" />
+  </ItemGroup>
+
 </Project>
