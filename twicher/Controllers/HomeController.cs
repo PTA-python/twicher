@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using twicher.Models;
 
 namespace twicher.Controllers
 {
