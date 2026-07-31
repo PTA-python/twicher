@@ -30,4 +30,8 @@
     <ProjectReference Include="..\Twicher.data\Twicher.data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\uploaded\" />
+  </ItemGroup>
+
 </Project>
