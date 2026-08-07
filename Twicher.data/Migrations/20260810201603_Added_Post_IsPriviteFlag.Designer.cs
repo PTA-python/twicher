@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Twicher.Data;
 
@@ -11,9 +12,11 @@ using Twicher.Data;
 namespace twicher.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260810201603_Added_Post_IsPriviteFlag")]
+    partial class Added_Post_IsPriviteFlag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,27 +134,6 @@ namespace twicher.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("Twicher.Data.Models.Report", b =>
-                {
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.HasKey("PostId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reports");
-                });
-
             modelBuilder.Entity("Twicher.Data.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -240,25 +222,6 @@ namespace twicher.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Twicher.Data.Models.Report", b =>
-                {
-                    b.HasOne("Twicher.Data.Models.Post", "Post")
-                        .WithMany("Reports")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Twicher.Data.Models.User", "User")
-                        .WithMany("Reports")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Twicher.Data.Models.Post", b =>
                 {
                     b.Navigation("Comments");
@@ -266,8 +229,6 @@ namespace twicher.Migrations
                     b.Navigation("Favorites");
 
                     b.Navigation("Likes");
-
-                    b.Navigation("Reports");
                 });
 
             modelBuilder.Entity("Twicher.Data.Models.User", b =>
@@ -279,8 +240,6 @@ namespace twicher.Migrations
                     b.Navigation("Likes");
 
                     b.Navigation("Posts");
-
-                    b.Navigation("Reports");
                 });
 #pragma warning restore 612, 618
         }
