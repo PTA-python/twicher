@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -8,16 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\css\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\images\favicon.png" />
     <None Include="wwwroot\images\icons\group-2.png" />
     <None Include="wwwroot\images\icons\home.png" />
     <None Include="wwwroot\images\icons\page.png" />
     <None Include="wwwroot\images\icons\video.png" />
     <None Include="wwwroot\images\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Tailwind.Extensions.AspNetCore" Version="1.1.2" />
   </ItemGroup>
 
 </Project>
