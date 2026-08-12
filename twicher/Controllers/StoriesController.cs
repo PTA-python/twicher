@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Twicher.Controllers.Base;
 using Twicher.Data;
 using Twicher.Data.Helpers.Enums;
 using Twicher.Data.Models;
@@ -8,7 +10,8 @@ using Twicher.ViewModels.Stories;
 
 namespace Twicher.Controllers
 {
-    public class StoriesController : Controller
+    [Authorize]
+    public class StoriesController : BaseController
     {
         private readonly IStoriesService _storiesService;
         private readonly IFilesService _filesService;
@@ -22,7 +25,8 @@ namespace Twicher.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateStory(StoryVM storyVM)
         {
-            int loggedInUserId = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
             var imageUploadPath = await _filesService.UploadImageAsync(storyVM.Image, ImageFileType.StoryImage);
 
@@ -31,7 +35,7 @@ namespace Twicher.Controllers
                 DateCreated = DateTime.UtcNow,
                 IsDeleted = false,
                 ImageUrl = imageUploadPath,
-                UserId = loggedInUserId
+                UserId = loggedInUserId.Value
             };
 
             await _storiesService.CreateStoryAsync(newStory);

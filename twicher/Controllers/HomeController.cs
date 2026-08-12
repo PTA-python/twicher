@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using Twicher.Controllers.Base;
 using Twicher.Data;
 using Twicher.Data.Helpers;
 using Twicher.Data.Helpers.Enums;
@@ -11,7 +13,8 @@ using Twicher.ViewModels.Home;
 
 namespace Twicher.Controllers
 {
-    public class HomeController : Controller
+    [Authorize]
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IPostsService _postsService;
@@ -29,10 +32,13 @@ namespace Twicher.Controllers
             _filesService = filesService;
         }
 
+
         public async Task<IActionResult> Index()
         {
-            int loggedInUserId = 1;
-            var allPosts = await _postsService.GetAllPostsAsync(loggedInUserId);
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
+            var allPosts = await _postsService.GetAllPostsAsync(loggedInUserId.Value);
 
             return View(allPosts);
         }
@@ -47,8 +53,8 @@ namespace Twicher.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePost(PostVM post)
         {
-            //Get the logged in user
-            int loggedInUser = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
             var imageUploadPath = await _filesService.UploadImageAsync(post.Image, ImageFileType.PostImage);
 
@@ -60,7 +66,7 @@ namespace Twicher.Controllers
                 DateUpdated = DateTime.UtcNow,
                 ImageUrl = imageUploadPath,
                 NrOfReports = 0,
-                UserId = loggedInUser
+                UserId = loggedInUserId.Value
             };
 
             await _postsService.CreatePostAsync(newPost);
@@ -74,8 +80,10 @@ namespace Twicher.Controllers
         [HttpPost]
         public async Task<IActionResult> TogglePostLike(PostLikeVM postLikeVM)
         {
-            int loggedInUserId = 1;
-            await _postsService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId);
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
+            await _postsService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
 
             return RedirectToAction("Index");
         }
@@ -83,8 +91,9 @@ namespace Twicher.Controllers
         [HttpPost]
         public async Task<IActionResult> TogglePostFavorite(PostFavoriteVM postFavoriteVM)
         {
-            int loggedInUserId = 1;
-            await _postsService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId);
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+            await _postsService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
 
             return RedirectToAction("Index");
         }
@@ -93,8 +102,9 @@ namespace Twicher.Controllers
         [HttpPost]
         public async Task<IActionResult> TogglePostVisibility(PostVisibilityVM postVisibilityVM)
         {
-            int loggedInUserId = 1;
-            await _postsService.TogglePostVisibilityAsync(postVisibilityVM.PostId, loggedInUserId);
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+            await _postsService.TogglePostVisibilityAsync(postVisibilityVM.PostId, loggedInUserId.Value);
 
             return RedirectToAction("Index");
         }
@@ -102,12 +112,13 @@ namespace Twicher.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPostComment(PostCommentVM postCommentVM)
         {
-            int loggedInUserId = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
             //Creat a post object
             var newComment = new Comment()
             {
-                UserId = loggedInUserId,
+                UserId = loggedInUserId.Value,
                 PostId = postCommentVM.PostId,
                 Content = postCommentVM.Content,
                 DateCreated = DateTime.UtcNow,
@@ -122,8 +133,10 @@ namespace Twicher.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPostReport(PostReportVM postReportVM)
         {
-            int loggedInUserId = 1;
-            await _postsService.ReportPostAsync(postReportVM.PostId, loggedInUserId);
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
+            await _postsService.ReportPostAsync(postReportVM.PostId, loggedInUserId.Value);
 
             return RedirectToAction("Index");
         }
