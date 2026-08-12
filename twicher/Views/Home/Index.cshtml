@@ -5,7 +5,7 @@
     <div class="lg:flex 2xl:gap-16 gap-12 max-w-[1065px] mx-auto" id="js-oversized">
         <div class="max-w-[680px] mx-auto">
 
-            @await Component.InvokeAsync("Stories") 
+            @await Component.InvokeAsync("Stories")
 
             <div class="md:max-w-[580px] mx-auto flex-1 xl:space-y-6 space-y-3">
 
@@ -51,7 +51,7 @@
                     <partial name="Sidebar/_SuggestedFriends" />
                 </div>
                 <div class="box p-5 px-6 border1">
-                    <partial name="Sidebar/_TrendsForYou" />
+                    @await Component.InvokeAsync("Hashtags")
                 </div>
             </div>
         </div>
