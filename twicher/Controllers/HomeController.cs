@@ -78,6 +78,7 @@ namespace Twicher.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TogglePostLike(PostLikeVM postLikeVM)
         {
             var loggedInUserId = GetUserId();
@@ -85,7 +86,8 @@ namespace Twicher.Controllers
 
             await _postsService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
 
-            return RedirectToAction("Index");
+            var post = await _postsService.GetPostByIdAsync(postLikeVM.PostId);
+            return PartialView("Home/_Post", post);
         }
 
         [HttpPost]
